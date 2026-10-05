@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { LinkButton } from "@/components/button";
 import { Faq } from "@/components/faq";
-import { ArrowIcon, CheckIcon, WhatsAppIcon } from "@/components/icons";
+import { ArrowIcon, WhatsAppIcon } from "@/components/icons";
 import { PageHero } from "@/components/page-hero";
 import { SectionHead } from "@/components/section-head";
+import { SolutionTabs, type SolutionBlock } from "@/components/solution-tabs";
 import { EQUIPMENT, SITE } from "@/lib/content";
 
 import residentiel from "@/assets/photos/v03-17-finished-array-villa.jpg";
@@ -19,44 +19,60 @@ export const metadata: Metadata = {
   alternates: { canonical: "/solutions" },
 };
 
-const BLOCKS = [
+const BLOCKS: SolutionBlock[] = [
   {
     id: "residentiel",
     tag: "Résidentiel",
     title: "Votre maison produit sa propre électricité",
     text: "Toiture plate, toit incliné, terrasse ou pergola : nous dimensionnons l’installation d’après votre consommation et la surface disponible, puis nous la posons proprement.",
-    points: ["Visite technique et étude sur place", "Structure adaptée à votre toit", "Câblage protégé, coffrets de protection"],
     img: residentiel,
     alt: "Grande installation de panneaux solaires sur le toit d’une villa",
+    features: [
+      { title: "Visite technique et étude sur place", detail: "Nous regardons la toiture, les ombrages, la structure et votre tableau électrique avant de proposer quoi que ce soit." },
+      { title: "Structure adaptée à votre toit", detail: "Toit-terrasse, toit incliné ou pergola : la structure métallique est choisie et fixée en fonction de votre bâtiment." },
+      { title: "Câblage protégé, coffrets de protection", detail: "Câbles protégés, coffrets DC et AC, parafoudre et disjoncteurs pour une installation sûre." },
+    ],
   },
   {
     id: "commercial",
     tag: "Commercial",
     title: "Moins de charges, plus de marge",
     text: "Commerces, ateliers, bureaux : l’électricité produite en journée réduit directement votre facture. Nous étudions votre profil de consommation avant de proposer une puissance.",
-    points: ["Étude de votre consommation", "Installation sur toit-terrasse ou structure", "Un seul interlocuteur du devis à la mise en service"],
     img: commercial,
     alt: "Panneaux solaires inclinés sur un toit-terrasse",
+    features: [
+      { title: "Étude de votre consommation", detail: "Nous partons de vos factures pour dimensionner au plus juste, sans surinvestir." },
+      { title: "Installation sur toit-terrasse ou structure", detail: "Rangées de panneaux inclinés sur structure métallique, positionnées pour limiter les ombres entre rangées." },
+      { title: "Un seul interlocuteur", detail: "Du devis à la mise en service, la même équipe vous accompagne." },
+    ],
   },
   {
     id: "stockage",
     tag: "Stockage & suivi",
     title: "Gardez votre énergie pour le soir",
     text: "Un onduleur hybride et une batterie permettent d’utiliser le soir une partie de ce que vous produisez le jour. Le suivi vous montre ce que fait votre installation.",
-    points: ["Onduleurs hybrides et réseau", "Batteries selon votre besoin", "Suivi de la production"],
     img: stockage,
     alt: "Deux onduleurs Sofar installés au mur au-dessus de leurs coffrets de protection",
+    features: [
+      { title: "Onduleurs hybrides et réseau", detail: "Nous installons des onduleurs de marques reconnues, choisis selon que vous souhaitez ou non une batterie." },
+      { title: "Batteries selon votre besoin", detail: "La capacité de stockage est choisie avec vous d’après vos habitudes de consommation du soir." },
+      { title: "Suivi de la production", detail: "Vous voyez ce que produit votre installation et repérez rapidement un éventuel problème." },
+    ],
   },
   {
     id: "entretien",
     tag: "Entretien",
     title: "Une installation qui reste performante",
     text: "Nettoyage, contrôle des connexions et vérification de l’onduleur : nous restons disponibles après la pose pour que votre installation produise comme prévu.",
-    points: ["Contrôle de l’installation", "Nettoyage des panneaux", "Intervention en cas de panne"],
     img: entretien,
     alt: "Gros plan sur des panneaux solaires posés sur un toit",
+    features: [
+      { title: "Contrôle de l’installation", detail: "Vérification des fixations, des connexions et des protections." },
+      { title: "Nettoyage des panneaux", detail: "La poussière réduit la production : un nettoyage régulier maintient de bons rendements." },
+      { title: "Intervention en cas de panne", detail: "Appelez-nous : nous diagnostiquons et intervenons sur votre installation." },
+    ],
   },
-] as const;
+];
 
 export default function SolutionsPage() {
   return (
@@ -74,48 +90,9 @@ export default function SolutionsPage() {
         </LinkButton>
       </PageHero>
 
-      <div className="container-x flex flex-col gap-20 py-20 md:gap-28 md:py-28">
-        {BLOCKS.map((b, i) => (
-          <section
-            key={b.id}
-            id={b.id}
-            aria-labelledby={`${b.id}-t`}
-            className="grid items-center gap-10 lg:grid-cols-2 lg:gap-20"
-          >
-            <div className={`reveal img-zoom relative aspect-[4/3] overflow-hidden rounded-card ${i % 2 ? "lg:order-2" : ""}`}>
-              <Image
-                src={b.img}
-                alt={b.alt}
-                fill
-                sizes="(min-width: 1024px) 560px, 100vw"
-                quality={75}
-                placeholder="blur"
-                {...(i === 0 ? { loading: "eager" as const, fetchPriority: "high" as const } : {})}
-                className="object-cover"
-              />
-            </div>
-            <div className="flex flex-col gap-5">
-              <span className="w-fit rounded-input bg-blue-50 px-2.5 py-1.5 font-mono text-[11px] font-medium uppercase tracking-wider text-blue-700">
-                {b.tag}
-              </span>
-              <h2 id={`${b.id}-t`} className="reveal t-h2">
-                {b.title}
-              </h2>
-              <p className="reveal t-lead text-text-soft">{b.text}</p>
-              <ul className="reveal flex flex-col gap-3">
-                {b.points.map((p) => (
-                  <li key={p} className="flex items-start gap-3">
-                    <span className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full bg-ok-bg text-ok-text">
-                      <CheckIcon width={14} height={14} />
-                    </span>
-                    {p}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </section>
-        ))}
-      </div>
+      <section aria-label="Nos solutions" className="container-x py-16 md:py-24">
+        <SolutionTabs blocks={BLOCKS} />
+      </section>
 
       <section aria-labelledby="materiel" className="on-dark bg-night text-white">
         <div className="container-x flex flex-col gap-10 py-20 md:py-28">

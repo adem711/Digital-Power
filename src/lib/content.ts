@@ -123,3 +123,23 @@ export const OFFERS = [
     text: "Des puissances courantes pour les foyers. Le pack définitif est choisi après étude de votre consommation et de votre toit.",
   },
 ] as const;
+
+// DEMO — indicative assumptions behind the estimator. NOT confirmed by the owner: validate before launch
+// (electricity tariff, solar yield, panel size). Shown to visitors in the "Hypothèses" disclosure.
+export const ESTIMATOR = {
+  tariff: 0.3, // TND per kWh, blended average
+  yieldPerKwc: 1600, // kWh produced per kWc per year
+  coverage: 0.8, // share of consumption the system is sized to cover
+  panelWatt: 550,
+  panelArea: 2.6, // m² per panel
+  min: 30,
+  max: 600,
+  step: 10,
+  initial: 120,
+} as const;
+
+export const SPEC_CHIPS = [
+  { label: "Panneaux", value: "Monocristallins · bifaciaux" },
+  { label: "Onduleurs", value: "Réseau · hybrides" },
+  { label: "Après la pose", value: "Suivi de production" },
+] as const;

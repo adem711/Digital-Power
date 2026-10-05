@@ -4,7 +4,9 @@ import { FacebookIcon, PhoneIcon, WhatsAppIcon } from "./icons";
 
 export function Footer() {
   return (
-    <footer className="on-dark bg-night text-on-night">
+    <footer className="on-dark relative isolate overflow-hidden bg-night text-on-night">
+      <div aria-hidden="true" className="orb absolute -bottom-48 -left-32 -z-10 size-[520px]" />
+      <div aria-hidden="true" className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-blue-600 to-transparent" />
       <div className="container-x grid gap-12 py-16 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <div className="max-w-sm">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -20,13 +22,13 @@ export function Footer() {
           <ul className="mt-4 space-y-1">
             {NAV.map((l) => (
               <li key={l.href}>
-                <Link href={l.href} className="inline-block py-1.5 transition-colors hover:text-white">
+                <Link href={l.href} className="link-u inline-block py-1.5 hover:text-white">
                   {l.label}
                 </Link>
               </li>
             ))}
             <li>
-              <Link href="/mentions-legales" className="inline-block py-1.5 transition-colors hover:text-white">
+              <Link href="/mentions-legales" className="link-u inline-block py-1.5 hover:text-white">
                 Mentions légales
               </Link>
             </li>

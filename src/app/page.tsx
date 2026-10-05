@@ -2,10 +2,11 @@ import type { CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { LinkButton } from "@/components/button";
+import { HeroFX } from "@/components/hero-fx";
 import { ArrowIcon, PhoneIcon, PinIcon, WhatsAppIcon } from "@/components/icons";
 import { SectionHead } from "@/components/section-head";
 import { SunMark } from "@/components/sun-mark";
-import { BRANDS, SITE, SOLUTIONS, STEPS } from "@/lib/content";
+import { BRANDS, SITE, SOLUTIONS, SPEC_CHIPS, STEPS } from "@/lib/content";
 
 import heroPhoto from "@/assets/photos/v07-03-aerial-array-over-terrace.jpg";
 import residentiel from "@/assets/photos/v01-06-rooftop-array-house.jpg";
@@ -37,7 +38,7 @@ export default function Home() {
   return (
     <>
       {/* 1 — Hero */}
-      <section className="on-dark relative isolate overflow-hidden bg-night text-white">
+      <section data-hero className="on-dark relative isolate overflow-hidden bg-night text-white">
         <Image
           src={heroPhoto}
           alt="Vue aérienne d’une installation de panneaux solaires sur un toit-terrasse"
@@ -51,24 +52,24 @@ export default function Home() {
         />
         <div className="absolute inset-0 -z-20 bg-night/60 md:bg-linear-to-r md:from-night/95 md:via-night/50 md:to-night/0" />
         <div className="absolute inset-x-0 bottom-0 -z-20 h-1/4 bg-linear-to-t from-night/90 to-transparent" />
+        <HeroFX />
+        {/* The one gradient moment of this page: the sun mark */}
         <SunMark
           id="hero-sun"
           spin
-          className="pointer-events-none absolute -top-20 -right-24 -z-10 w-[300px] sm:w-[400px] lg:top-1/2 lg:-right-56 lg:w-[640px] lg:-translate-y-1/2"
+          className="pointer-events-none absolute -top-24 -right-28 -z-10 w-[250px] sm:w-[400px] lg:top-1/2 lg:-right-56 lg:w-[640px] lg:-translate-y-1/2"
         />
 
-        <div className="container-x flex min-h-[calc(100svh-72px)] flex-col justify-end pt-32 pb-12 md:pb-16 lg:min-h-[min(760px,calc(100svh-72px))]">
-          <p className="rise t-label mb-6 text-sun-400" style={{ "--i": 0 } as CSSProperties}>
+        <div className="container-x flex min-h-[calc(100svh-72px)] flex-col justify-end pt-32 pb-12 md:pb-16 lg:min-h-[min(780px,calc(100svh-72px))]">
+          <p className="rise t-label mb-6 flex items-center gap-3 text-sun-400" style={{ "--i": 0 } as CSSProperties}>
+            <span aria-hidden="true" className="pulse-ring relative size-2.5 rounded-full bg-sun-400 text-sun-400" />
             Installation solaire · de l’étude au raccordement
           </p>
           <h1 className="rise t-display max-w-4xl" style={{ "--i": 1 } as CSSProperties}>
             Votre toit est <br className="hidden sm:block" />
             une <span className="text-sun-400">centrale.</span>
           </h1>
-          <p
-            className="rise t-lead mt-6 max-w-xl text-on-night"
-            style={{ "--i": 2 } as CSSProperties}
-          >
+          <p className="rise t-lead mt-6 max-w-xl text-on-night" style={{ "--i": 2 } as CSSProperties}>
             Nous étudions, fournissons, posons et raccordons votre installation photovoltaïque. Vous produisez votre
             électricité, vous réduisez votre facture.
           </p>
@@ -76,13 +77,38 @@ export default function Home() {
             <LinkButton href="/contact#devis" variant="gold">
               Demander un devis gratuit <ArrowIcon width={18} height={18} />
             </LinkButton>
-            <LinkButton href="/realisations" variant="outline-light">
-              Voir nos réalisations
+            <LinkButton href="/offres#estimateur" variant="outline-light">
+              Estimer ma puissance
             </LinkButton>
           </div>
-          <p
-            className="rise t-label mt-12 flex flex-wrap items-center gap-x-3 gap-y-1 text-on-night-muted"
+
+          <ul
+            aria-label="Ce que nous installons"
+            className="rise mt-10 flex flex-wrap gap-3"
             style={{ "--i": 4 } as CSSProperties}
+          >
+            {SPEC_CHIPS.map((c, i) => (
+              <li
+                key={c.label}
+                className="float-y glass card-lift on-dark flex items-center gap-3 rounded-full py-2.5 pr-5 pl-3"
+                style={{ "--i": i } as CSSProperties}
+              >
+                <span className="flex size-8 items-center justify-center rounded-full bg-sun-400/15 text-sun-400">
+                  <span className="size-2 rounded-full bg-sun-400 shadow-[0_0_10px_2px_rgb(242_194_0/0.7)]" />
+                </span>
+                <span className="leading-tight">
+                  <span className="block font-mono text-[10px] tracking-[0.14em] text-on-night-muted uppercase">
+                    {c.label}
+                  </span>
+                  <span className="block text-sm font-semibold">{c.value}</span>
+                </span>
+              </li>
+            ))}
+          </ul>
+
+          <p
+            className="rise t-label mt-8 flex flex-wrap items-center gap-x-3 gap-y-1 text-on-night-muted"
+            style={{ "--i": 5 } as CSSProperties}
           >
             <PinIcon width={16} height={16} className="text-sun-400" />
             {SITE.agencies.join(" · ")}
@@ -189,11 +215,11 @@ export default function Home() {
             <span aria-hidden="true" className="absolute top-2 bottom-2 left-[19px] w-px bg-night-line" />
             <span aria-hidden="true" className="draw-line absolute top-2 bottom-2 left-[19px] w-px bg-sun-400" />
             {STEPS.map((s, i) => (
-              <li key={s.title} className="reveal relative flex gap-6">
-                <span className="relative z-10 flex size-10 shrink-0 items-center justify-center rounded-full border border-sun-400 bg-night font-mono text-sm font-medium text-sun-400">
+              <li key={s.title} className="reveal relative flex gap-5">
+                <span className="relative z-10 mt-5 flex size-10 shrink-0 items-center justify-center rounded-full border border-sun-400 bg-night font-mono text-sm font-medium text-sun-400">
                   {i + 1}
                 </span>
-                <div>
+                <div className="glass card-lift on-dark flex-1 rounded-card p-5 md:p-6">
                   <h4 className="t-h3 text-white">{s.title}</h4>
                   <p className="mt-2 max-w-md text-on-night">{s.text}</p>
                 </div>
@@ -284,7 +310,12 @@ export default function Home() {
       </section>
 
       {/* 7 — Closing CTA */}
-      <section aria-labelledby="devis" className="on-dark bg-night text-white">
+      <section aria-labelledby="devis" className="on-dark relative isolate overflow-hidden bg-night text-white">
+        <div aria-hidden="true" className="grid-bg absolute inset-0 -z-10 opacity-60" />
+        <div
+          aria-hidden="true"
+          className="orb breathe absolute top-1/2 -right-32 -z-10 size-[560px] -translate-y-1/2 lg:size-[820px]"
+        />
         <div className="container-x flex flex-col items-start gap-8 py-20 md:py-28">
           <p className="t-label text-sun-400">Devis gratuit · sans engagement</p>
           <h2 id="devis" className="reveal t-display max-w-3xl">
@@ -300,6 +331,9 @@ export default function Home() {
             </LinkButton>
             <LinkButton href={SITE.whatsapp.href} variant="outline-light">
               <WhatsAppIcon /> Écrire sur WhatsApp
+            </LinkButton>
+            <LinkButton href="/offres#estimateur" variant="outline-light">
+              Estimer ma puissance
             </LinkButton>
           </div>
         </div>

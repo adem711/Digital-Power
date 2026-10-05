@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { LinkButton } from "@/components/button";
 import { DemoBadge } from "@/components/demo-badge";
+import { Estimator } from "@/components/estimator";
 import { ArrowIcon, PhoneIcon, WhatsAppIcon } from "@/components/icons";
 import { PageHero } from "@/components/page-hero";
 import { SectionHead } from "@/components/section-head";
@@ -52,6 +53,21 @@ export default function OffresPage() {
               <p className="text-text-soft">{o.text}</p>
             </article>
           ))}
+        </div>
+      </section>
+
+      <section id="estimateur" aria-labelledby="estimateur-t" className="on-dark bg-night text-white">
+        <div className="container-x flex flex-col gap-10 py-20 md:py-28">
+          <div className="flex flex-col gap-4">
+            <p className="t-label text-sun-400">Estimateur</p>
+            <h2 id="estimateur-t" className="reveal t-h1 max-w-2xl">
+              Quelle puissance pour votre facture&nbsp;?
+            </h2>
+            <p className="reveal t-lead max-w-2xl text-on-night">
+              Faites glisser le curseur : nous estimons la puissance, le nombre de panneaux et la surface nécessaires.
+            </p>
+          </div>
+          <Estimator />
         </div>
       </section>
 

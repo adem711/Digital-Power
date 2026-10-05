@@ -13,14 +13,11 @@ export function PageHero({
   children?: ReactNode;
 }) {
   return (
-    <section className="on-dark relative overflow-hidden bg-night text-white">
+    <section className="on-dark relative isolate overflow-hidden bg-night text-white">
+      <div aria-hidden="true" className="grid-bg pointer-events-none absolute inset-0 -z-10" />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -right-24 -bottom-24 size-[360px] rounded-full border border-night-line md:size-[520px]"
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -right-8 -bottom-8 size-[220px] rounded-full border border-night-line md:size-[320px]"
+        className="orb breathe pointer-events-none absolute top-1/2 -right-40 -z-10 size-[460px] -translate-y-1/2 md:size-[700px]"
       />
       <div className="container-x relative py-16 md:py-24">
         <p className="t-label text-sun-400">{label}</p>
