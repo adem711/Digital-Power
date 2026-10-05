@@ -1,0 +1,274 @@
+@import "tailwindcss";
+
+/* Digital Power brand tokens — source: Brand Info/Digital Power Brand Guidelines.html */
+@theme {
+  --color-night: #0f1b2d;
+  --color-night-2: #1c2a40;
+  --color-night-line: #33435e;
+  --color-ink: #14181f;
+
+  --color-blue-50: #eaf1fd;
+  --color-blue-200: #c3d6f8;
+  --color-blue-400: #6e9ceb;
+  --color-blue-600: #1d5fd1;
+  --color-blue-700: #1748a0;
+  --color-blue-900: #0f2e66;
+
+  --color-sun-50: #fff6d9;
+  --color-sun-200: #fce38a;
+  --color-sun-400: #f2c200;
+  --color-sun-600: #f08a00;
+  --color-sun-700: #c46a00;
+  --color-sun-900: #7a4100;
+
+  --color-paper: #f6f4ef;
+  --color-line: #ddd8cc;
+  --color-muted: #6b6658;
+  --color-text-soft: #4a463d;
+  --color-on-night: #c9d1de;
+  --color-on-night-muted: #9aa6bd;
+
+  --color-ok: #1f9d6b;
+  --color-ok-bg: #e3f4ec;
+  --color-ok-text: #14704c;
+  --color-fault: #d2402f;
+
+  --font-display: var(--font-barlow-semi), "Arial Narrow", sans-serif;
+  --font-sans: var(--font-barlow), system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+
+  --radius-input: 4px;
+  --radius-card: 8px;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 88px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-blue-600);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+.on-dark :focus-visible,
+.on-dark:focus-visible {
+  outline-color: var(--color-sun-400);
+}
+
+::selection {
+  background: var(--color-sun-400);
+  color: var(--color-night);
+}
+
+/* Type scale — guideline §02 */
+@layer components {
+  .t-display {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2.75rem, 6vw + 0.5rem, 5rem);
+    line-height: 0.95;
+    letter-spacing: -0.005em;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+  .t-h1 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2.25rem, 4.5vw, 3.5rem);
+    line-height: 1;
+    text-wrap: balance;
+  }
+  .t-h2 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2rem, 3.4vw, 2.5rem);
+    line-height: 1.05;
+    text-wrap: balance;
+  }
+  .t-h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.75rem;
+    line-height: 1.15;
+  }
+  .t-lead {
+    font-size: 1.25rem;
+    line-height: 1.5;
+    text-wrap: pretty;
+  }
+  .t-label {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .t-data {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 3rem;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .container-x {
+    width: 100%;
+    max-width: 1240px;
+    margin-inline: auto;
+    padding-inline: 20px;
+  }
+  @media (min-width: 768px) {
+    .container-x {
+      padding-inline: 32px;
+    }
+  }
+}
+
+/* ---- Motion ------------------------------------------------------------
+   Rules: transform/opacity only, LCP content never hidden, reduced-motion
+   respected, scroll reveals are pure CSS (no hydration cost).            */
+
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes rise {
+  from {
+    transform: translateY(18px);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes draw-line {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.45;
+  }
+  100% {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Hero text rises on load — transform only so the text paints immediately */
+  .rise {
+    animation: rise 0.9s var(--ease-out) both;
+    animation-delay: calc(var(--i, 0) * 90ms);
+  }
+  .spin-slow {
+    animation: spin-slow 120s linear infinite;
+    transform-origin: center;
+    transform-box: fill-box;
+  }
+  .pulse-ring::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    border: 2px solid currentColor;
+    animation: pulse-ring 2.4s ease-out infinite;
+    pointer-events: none;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: reveal-up linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
+    }
+    .draw-line {
+      transform-origin: top;
+      animation: draw-line linear both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 60%;
+    }
+    .parallax-slow {
+      animation: parallax linear both;
+      animation-timeline: view();
+    }
+  }
+}
+@keyframes parallax {
+  from {
+    transform: translateY(24px);
+  }
+  to {
+    transform: translateY(-24px);
+  }
+}
+
+.card-lift {
+  transition:
+    transform 0.4s var(--ease-out),
+    box-shadow 0.4s var(--ease-out);
+}
+@media (hover: hover) {
+  .card-lift:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 40px -18px rgb(15 27 45 / 0.35);
+  }
+}
+.img-zoom img {
+  transition: transform 0.9s var(--ease-out);
+}
+@media (hover: hover) {
+  .img-zoom:hover img {
+    transform: scale(1.05);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
