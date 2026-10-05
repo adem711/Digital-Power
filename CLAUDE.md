@@ -4,15 +4,13 @@
 Digital Power is a Tunisian solar (photovoltaic) installation company: survey, design, supply, installation and connection of rooftop systems. It is a service business: we go to the customer, and it has **agencies (offices) in Sfax, Tunis, Sousse and Mahrès**. The site is for **homeowners and small businesses in Tunisia** and its job is to get them to **call, WhatsApp or request a quote**. Visiting an agency is secondary; the main message is that we come to you. Site language: **French only** (lang="fr"). The shopfront and van are bilingual FR/AR, so Arabic/RTL may come later; don't hard-code anything that would block it.
 
 ## Status
-- [x] Workspace explored, questions answered
-- [x] Scaffold, shell, Accueil built and committed locally (review stop)
-- [ ] Solutions, Réalisations, Offres, Contact + form, SEO files, perf pass, push, Vercel
-- Repo: https://github.com/adem711/Digital-Power.git (local git initialised, `origin` set, nothing pushed yet; `gh` CLI is **not installed**, plain git is).
-- Built so far: scaffold (Next 16.3, React 19.2), tokens, content module, curated photos, header/footer/mobile bar, Accueil. Other pages are `PageStub` placeholders. Remaining plan: Solutions → Réalisations → Offres → Contact/form → SEO (`llms.txt`, sitemap, JSON-LD) → perf pass → push.
-- Lighthouse (production build, local): Accueil mobile Perf 91–93 (LCP ~3.3 s simulated; FCP 0.9 s), desktop 100; A11y/BP/SEO/Agentic 100 on both. Mobile LCP is the one to keep improving. `llms-txt` is n/a until the file exists.
-- Test tooling: Python Playwright + its Chromium are installed; Lighthouse via `npx lighthouse` with `CHROME_PATH` pointing at Playwright's chrome.exe.
-- Next 16 note: `AGENTS.md` (from the scaffold) says to read `node_modules/next/dist/docs/` before writing Next code. `priority` → `preload`; middleware is now `proxy`.
-- Open: domain, confirmed offer terms, real quote-recipient email, agency street addresses/hours.
+- [x] Workspace explored, questions answered, plan approved
+- [x] Built: scaffold, shell, Accueil, Solutions, Réalisations (filter + lightbox), Offres & garantie, Contact (quote form), Mentions légales, SEO files (`sitemap.ts`, `robots.ts`, `public/llms.txt`, JSON-LD, OG image)
+- [ ] Owner review of all pages → replace demo content → push to GitHub → import in Vercel → set env vars + domain
+- Repo: https://github.com/adem711/Digital-Power.git (local git, `origin` set; **nothing pushed yet**; `gh` CLI is not installed, plain git is).
+- Next 16 note: `AGENTS.md` (from the scaffold) says to read `node_modules/next/dist/docs/` before writing Next code. `priority` → `fetchPriority="high"`/`loading="eager"`; middleware is now `proxy`; `images.qualities` is an allowlist; `LayoutProps` is a generated global type (run a build/dev once for tsc to see it).
+- Lighthouse (production build, local; PSI will differ a little): desktop 99–100 everywhere, mobile 90–96, A11y/Best Practices/SEO/Agentic 100. Mobile LCP (~3.2–3.6 s *simulated*, FCP ~0.9 s) is the one weak metric: on text-only pages it is the font swap, on Accueil the hero image. Tried and **rejected**: `preload: false` on fonts (FCP 1.5 s, CLS 0.03), dropping the hero blur placeholder (no change).
+- Test tooling: Python Playwright + its Chromium; Lighthouse via `npx lighthouse` with `CHROME_PATH` set to Playwright's chrome.exe. On Windows stop servers by port with PowerShell (`Get-NetTCPConnection`); `pkill` does not work. Run the prod server with `npm run start -- -p 3100`.
 
 ## Stack and commands
 Next.js (App Router) + TypeScript + Tailwind CSS v4 + Motion (`motion/react`). Deployed on **Vercel from GitHub** (auto-deploy `main`, preview per branch).
@@ -51,7 +49,7 @@ Never reference `Brand Info/` from code. Copy what's needed into `src/assets` / 
 - No testimonials, no statistics. **Never invent them.**
 
 ## Demo content register
-Anything not confirmed above is placeholder: mark it in code with `// DEMO` and list it here so it can be replaced before launch. Offer terms (30-year warranty, 7-year payment, pack prices) may appear only visibly flagged as demo until confirmed. Currently: quote-recipient email (`devis@example.com`, set via env var `QUOTE_TO_EMAIL`); opening hours (Lun–Sam 08:30–17:30, Dim fermé); agency street addresses (none shown).
+Anything not confirmed above is placeholder: mark it in code with `// DEMO` and list it here so it can be replaced before launch. Offer terms (30-year warranty, 7-year payment, pack prices) may appear only visibly flagged as demo until confirmed. Currently: quote-recipient email (`devis@example.com`, set via `QUOTE_TO_EMAIL`); opening hours (`SITE.hours`, Lun–sam 8 h 30–17 h 30); Offres page figures (30 ans, 7 ans, packs 2·3·3,5 kW) with a visible banner + `DemoBadge`s in `src/app/offres/page.tsx` and `OFFERS` in `content.ts`; Mentions légales identity fields (`DemoBadge`, raison sociale, matricule fiscal, siège); FAQ answers in `content.ts` (generic, review them); the 'Commercial' solution uses a residential-looking photo. Agency street addresses: none shown.
 
 ## Brand rules (strict)
 **Colors** (define once as Tailwind `@theme` tokens; no off-palette hex):
@@ -98,3 +96,7 @@ Pipeline: `next/image`, AVIF/WebP, explicit `width`/`height` or `fill`+`sizes`, 
 - Analytics: Vercel Analytics or Cloudflare-style cookieless only: no cookie banner.
 - Copy lives in `src/lib/content.ts` (French); no copy hard-coded in layout components.
 - Commits small and descriptive; run `npm run build` + lint + typecheck first. Update this file whenever a decision changes.
+- Scroll reveals: `.reveal` (CSS scroll-driven); its opacity must finish early in the keyframes so audits never catch text at partial contrast. Hero text uses `.rise` (transform only). Don't animate the LCP text's opacity.
+- Quote form: server action in `src/app/contact/actions.ts` + `src/components/quote-form.tsx` (`useActionState`). React 19 resets the form after each action, so `<select>`s are keyed on the submitted value to keep their selection. Without `RESEND_API_KEY` it logs in dev and shows a "call us" message in production. Env vars: see `.env.example`.
+- Gallery (`src/components/gallery.tsx`, data in `src/lib/gallery.ts`): 44 photos, native `<dialog>` lightbox, Motion layout animation only after the first filter click, first 4 thumbnails eager, no blur placeholders (payload).
+

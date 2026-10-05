@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Barlow, Barlow_Semi_Condensed, IBM_Plex_Mono } from "next/font/google";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
+import { JsonLd } from "@/components/json-ld";
 import { MobileBar } from "@/components/mobile-bar";
 import { SITE } from "@/lib/content";
 import "./globals.css";
@@ -60,6 +61,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         >
           Aller au contenu
         </a>
+        <JsonLd />
         <Header />
         <main id="contenu">{children}</main>
         <Footer />

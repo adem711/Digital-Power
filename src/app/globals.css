@@ -149,11 +149,15 @@ svg {
    respected, scroll reveals are pure CSS (no hydration cost).            */
 
 @keyframes reveal-up {
-  from {
+  /* Opacity finishes early so text is never caught at partial contrast by audits */
+  0% {
     opacity: 0;
     transform: translateY(28px);
   }
-  to {
+  20% {
+    opacity: 1;
+  }
+  100% {
     opacity: 1;
     transform: none;
   }
