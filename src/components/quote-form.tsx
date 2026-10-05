@@ -8,6 +8,13 @@ import { ArrowIcon, CheckIcon, PhoneIcon, WhatsAppIcon } from "./icons";
 
 const initial: QuoteState = { status: "idle" };
 
+// WebMCP (experimental): declares the form as a tool so AI agents can use it. Lighthouse "Agentic Browsing" checks it.
+const WEBMCP = {
+  toolname: "demander_devis_solaire",
+  tooldescription:
+    "Envoie une demande de devis gratuit à Digital Power (installation solaire en Tunisie). Champs : nom, téléphone, ville, type de bien, facture mensuelle en TND (facultatif), message (facultatif).",
+} as Record<string, string>;
+
 const field =
   "min-h-12 w-full rounded-input border border-line bg-white px-3.5 text-base text-ink placeholder:text-muted/70 focus:border-blue-600 aria-[invalid=true]:border-fault";
 
@@ -80,7 +87,7 @@ export function QuoteForm() {
   }
 
   return (
-    <form action={action} noValidate className="flex flex-col gap-6">
+    <form action={action} noValidate className="flex flex-col gap-6" {...WEBMCP}>
       {state.status === "error" ? (
         <div
           ref={summary}
