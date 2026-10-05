@@ -10,28 +10,28 @@ import { BRANDS, SITE, SOLUTIONS, SPEC_CHIPS, STEPS } from "@/lib/content";
 
 import heroPhoto from "@/assets/photos/v07-03-aerial-array-over-terrace.jpg";
 import residentiel from "@/assets/photos/v01-06-rooftop-array-house.jpg";
-import commercial from "@/assets/photos/v02-17-finished-array-skyline.jpg";
+import commercial from "@/assets/photos/v07-05-aerial-array-wide.jpg";
 import stockage from "@/assets/photos/v07-12-sungrow-inverters-cabinet.jpg";
-import stepSurvey from "@/assets/photos/v02-10-aerial-rooftop-before-installation.jpg";
-import stepStructure from "@/assets/photos/v02-12-mounting-structure-aerial.jpg";
+import stepSurvey from "@/assets/photos/v07-06-aerial-array-top-down.jpg";
+import stepStructure from "@/assets/photos/v01-01-panels-underside-structure.jpg";
 import stepInverter from "@/assets/photos/v09-15-sungrow-inverter-protection-boxes.jpg";
 import van from "@/assets/photos/v09-21-company-van-door-logo.jpg";
 import projPergola from "@/assets/photos/v09-01-pergola-array-side-view.jpg";
-import projLow from "@/assets/photos/v03-13-finished-array-low-angle.jpg";
-import projCanopy from "@/assets/photos/v07-08-panel-canopy-blue-sky.jpg";
-import projSunset from "@/assets/photos/v03-15-rooftop-view-sunset.jpg";
+import projRoof from "@/assets/photos/v08-06-array-rooftop-edge.jpg";
+import projBifacial from "@/assets/photos/v09-12-bifacial-underside-sky.jpg";
+import projFinished from "@/assets/photos/v08-01-finished-array-front.jpg";
 
 const SOLUTION_PHOTOS = [
   { img: residentiel, alt: "Panneaux solaires posés sur la toiture d’une maison, avec la ville en arrière-plan" },
-  { img: commercial, alt: "Grande installation de panneaux solaires inclinés sur un toit-terrasse" },
+  { img: commercial, alt: "Vue aérienne d’une grande installation de panneaux solaires sur une terrasse" },
   { img: stockage, alt: "Deux onduleurs Sungrow fixés au mur dans un coffret technique" },
 ];
 
 const PROJECTS = [
   { img: projPergola, alt: "Pergola solaire sur une terrasse carrelée sous un ciel bleu", label: "Pergola solaire" },
-  { img: projLow, alt: "Panneaux solaires vus en contre-plongée sous un ciel clair", label: "Toiture" },
-  { img: projCanopy, alt: "Dessous de panneaux bifaciaux sur leur structure métallique", label: "Panneaux bifaciaux" },
-  { img: projSunset, alt: "Toits de la ville au coucher du soleil, avec un panneau solaire au premier plan", label: "Fin de journée" },
+  { img: projRoof, alt: "Panneaux solaires en bord de toiture, avec les toits de la ville au fond", label: "Toiture" },
+  { img: projBifacial, alt: "Panneaux bifaciaux vus de dessous sous un ciel dégagé", label: "Panneaux bifaciaux" },
+  { img: projFinished, alt: "Installation terminée, rangées de panneaux sous un ciel bleu", label: "Installation terminée" },
 ];
 
 export default function Home() {
@@ -181,7 +181,7 @@ export default function Home() {
               <div className="parallax-slow absolute top-0 left-0 w-[62%] overflow-hidden rounded-card shadow-2xl">
                 <Image
                   src={stepSurvey}
-                  alt="Vue aérienne d’un toit-terrasse avant l’installation"
+                  alt="Vue du dessus d’une installation de panneaux solaires sur un toit-terrasse"
                   sizes="340px"
                   quality={75}
                   placeholder="blur"
@@ -191,7 +191,7 @@ export default function Home() {
               <div className="parallax-slow absolute right-0 bottom-0 w-[52%] overflow-hidden rounded-card shadow-2xl ring-4 ring-night">
                 <Image
                   src={stepStructure}
-                  alt="Structure métallique en cours de montage sur un toit"
+                  alt="Dessous de panneaux solaires fixés sur leur structure métallique"
                   sizes="300px"
                   quality={75}
                   placeholder="blur"
@@ -291,7 +291,7 @@ export default function Home() {
                   alt={p.alt}
                   fill
                   sizes="(min-width: 768px) 300px, 50vw"
-                  quality={60}
+                  quality={75}
                   placeholder="blur"
                   className="object-cover"
                 />

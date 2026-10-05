@@ -7,9 +7,9 @@ import { SectionHead } from "@/components/section-head";
 import { SolutionTabs, type SolutionBlock } from "@/components/solution-tabs";
 import { EQUIPMENT, SITE } from "@/lib/content";
 
-import residentiel from "@/assets/photos/v03-17-finished-array-villa.jpg";
-import commercial from "@/assets/photos/v02-18-finished-array-wide.jpg";
-import stockage from "@/assets/photos/v10-08-two-sofar-inverters-closeup.jpg";
+import residentiel from "@/assets/photos/v01-07-rooftop-array-skyline.jpg";
+import commercial from "@/assets/photos/v07-04-aerial-array-side-view.jpg";
+import stockage from "@/assets/photos/v07-12-sungrow-inverters-cabinet.jpg";
 import entretien from "@/assets/photos/v01-05-solar-array-closeup.jpg";
 
 export const metadata: Metadata = {
@@ -26,7 +26,7 @@ const BLOCKS: SolutionBlock[] = [
     title: "Votre maison produit sa propre électricité",
     text: "Toiture plate, toit incliné, terrasse ou pergola : nous dimensionnons l’installation d’après votre consommation et la surface disponible, puis nous la posons proprement.",
     img: residentiel,
-    alt: "Grande installation de panneaux solaires sur le toit d’une villa",
+    alt: "Champ de panneaux solaires sur un toit, avec les maisons de la ville en arrière-plan",
     features: [
       { title: "Visite technique et étude sur place", detail: "Nous regardons la toiture, les ombrages, la structure et votre tableau électrique avant de proposer quoi que ce soit." },
       { title: "Structure adaptée à votre toit", detail: "Toit-terrasse, toit incliné ou pergola : la structure métallique est choisie et fixée en fonction de votre bâtiment." },
@@ -39,7 +39,7 @@ const BLOCKS: SolutionBlock[] = [
     title: "Moins de charges, plus de marge",
     text: "Commerces, ateliers, bureaux : l’électricité produite en journée réduit directement votre facture. Nous étudions votre profil de consommation avant de proposer une puissance.",
     img: commercial,
-    alt: "Panneaux solaires inclinés sur un toit-terrasse",
+    alt: "Vue aérienne de panneaux solaires installés sur une terrasse",
     features: [
       { title: "Étude de votre consommation", detail: "Nous partons de vos factures pour dimensionner au plus juste, sans surinvestir." },
       { title: "Installation sur toit-terrasse ou structure", detail: "Rangées de panneaux inclinés sur structure métallique, positionnées pour limiter les ombres entre rangées." },
@@ -52,7 +52,7 @@ const BLOCKS: SolutionBlock[] = [
     title: "Gardez votre énergie pour le soir",
     text: "Un onduleur hybride et une batterie permettent d’utiliser le soir une partie de ce que vous produisez le jour. Le suivi vous montre ce que fait votre installation.",
     img: stockage,
-    alt: "Deux onduleurs Sofar installés au mur au-dessus de leurs coffrets de protection",
+    alt: "Deux onduleurs Sungrow fixés au mur dans un coffret technique",
     features: [
       { title: "Onduleurs hybrides et réseau", detail: "Nous installons des onduleurs de marques reconnues, choisis selon que vous souhaitez ou non une batterie." },
       { title: "Batteries selon votre besoin", detail: "La capacité de stockage est choisie avec vous d’après vos habitudes de consommation du soir." },

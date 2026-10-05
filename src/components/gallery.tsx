@@ -9,6 +9,18 @@ import { ArrowIcon, CloseIcon } from "./icons";
 const loadFeatures = () => import("@/lib/motion-features").then((m) => m.default);
 const EASE = [0.22, 1, 0.36, 1] as const;
 
+/** "Tout" view: round-robin across categories so the first rows show variety, not five similar rooftops. */
+function interleave(list: typeof GALLERY) {
+  const groups = new Map<string, typeof GALLERY>();
+  for (const g of list) groups.set(g.cat, [...(groups.get(g.cat) ?? []), g]);
+  const out: typeof GALLERY = [];
+  for (let i = 0; out.length < list.length; i++) {
+    for (const g of groups.values()) if (g[i]) out.push(g[i]);
+  }
+  return out;
+}
+const INTERLEAVED = interleave(GALLERY);
+
 export function Gallery() {
   const [filter, setFilter] = useState<"all" | GalleryCategory>("all");
   const [open, setOpen] = useState<number | null>(null);
@@ -19,7 +31,7 @@ export function Gallery() {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const lastFocus = useRef<HTMLElement | null>(null);
 
-  const items = GALLERY.filter((g) => filter === "all" || g.cat === filter);
+  const items = filter === "all" ? INTERLEAVED : GALLERY.filter((g) => g.cat === filter);
 
   const requestClose = useCallback(() => setClosing(true), []);
 
