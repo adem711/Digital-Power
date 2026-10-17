@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { AnimatePresence, LazyMotion, MotionConfig, m } from "motion/react";
+import { AnimatePresence, LazyMotion, MotionConfig } from "motion/react";
+import * as m from "motion/react-m";
 import { useEffect, useRef } from "react";
 import { NAV, SITE } from "@/lib/content";
 import { buttonClass } from "./button";
@@ -43,6 +44,7 @@ export default function MobileMenu({
       if (!f.length) return;
       const first = f[0];
       const last = f[f.length - 1];
+      if (!first || !last) return;
       if (e.shiftKey && document.activeElement === first) {
         e.preventDefault();
         last.focus();

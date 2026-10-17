@@ -19,7 +19,7 @@ export type SolutionBlock = {
 };
 
 export function SolutionTabs({ blocks }: { blocks: SolutionBlock[] }) {
-  const [active, setActive] = useState(blocks[0].id);
+  const [active, setActive] = useState(blocks[0]?.id ?? "");
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
 
   // Deep links: /solutions#commercial opens that tab.
@@ -37,8 +37,10 @@ export function SolutionTabs({ blocks }: { blocks: SolutionBlock[] }) {
     const n = blocks.length;
     const next = e.key === "ArrowRight" ? (i + 1) % n : e.key === "ArrowLeft" ? (i - 1 + n) % n : e.key === "Home" ? 0 : e.key === "End" ? n - 1 : -1;
     if (next < 0) return;
+    const target = blocks[next];
+    if (!target) return;
     e.preventDefault();
-    setActive(blocks[next].id);
+    setActive(target.id);
     tabs.current[next]?.focus();
   };
 

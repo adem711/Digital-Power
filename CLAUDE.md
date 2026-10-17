@@ -1,3 +1,5 @@
+@AGENTS.md
+
 # Digital Power — website
 
 ## What this is
@@ -7,10 +9,12 @@ Digital Power is a Tunisian solar (photovoltaic) installation company: survey, d
 - [x] Workspace explored, questions answered, plan approved
 - [x] Built: scaffold, shell, Accueil, Solutions (tabs), Réalisations (filter + lightbox), Offres & garantie (+ estimator), Contact (2-step quote form), Mentions légales, SEO files (`sitemap.ts`, `robots.ts`, `public/llms.txt`, JSON-LD, OG image)
 - [x] UI polish pass (glass surfaces, layered hover effects, glass header, slide-over menu, hero orbs/grid/chips, estimator with counters, tabbed Solutions, lightbox, stepped form). See *Design system* below.
+- [x] Cleanup / optimisation / a11y audit pass done (see *Cleanup pass* below)
 - [ ] Owner review of all pages → replace demo content → push to GitHub → import in Vercel → set env vars + domain
 - Repo: https://github.com/adem711/Digital-Power.git (local git, `origin` set; **nothing pushed yet**; `gh` CLI is not installed, plain git is).
-- Next 16 note: `AGENTS.md` (from the scaffold) says to read `node_modules/next/dist/docs/` before writing Next code. `priority` → `fetchPriority="high"`/`loading="eager"`; middleware is now `proxy`; `images.qualities` is an allowlist; `LayoutProps` is a generated global type (run a build/dev once for tsc to see it).
-- Lighthouse (production build, local; PSI will differ a little): desktop 99–100 everywhere, mobile 90–96, A11y/Best Practices/SEO/Agentic 100. Mobile LCP (~3.2–3.6 s *simulated*, FCP ~0.9 s) is the one weak metric: on text-only pages it is the font swap, on Accueil the hero image. Tried and **rejected**: `preload: false` on fonts (FCP 1.5 s, CLS 0.03), dropping the hero blur placeholder (no change).
+- Next 16 note: `AGENTS.md` (from the scaffold) says to read `node_modules/next/dist/docs/` before writing Next code. `priority` → `fetchPriority="high"`/`loading="eager"`; middleware is now `proxy`; `images.qualities` is an allowlist; `LayoutProps` is a generated global type: `npm run typecheck` runs `next typegen` first so it works from a clean checkout (and in CI).
+- Lighthouse (production build, local; PSI will differ a little; mobile numbers wobble ±3 run to run): desktop 99–100 everywhere, mobile Accueil 91–92, Solutions 90–91, Réalisations 90–91, Offres 93, Contact 96, A11y/Best Practices/SEO/Agentic 100. Mobile LCP (~3.2–3.6 s *simulated*, FCP ~0.9 s) is the one weak metric: on text-only pages it is the font swap, on Accueil the hero image. Tried and **rejected**: `preload: false` on fonts (FCP 1.5 s, CLS 0.03), dropping the hero blur placeholder (no change).
+- **A/B method for perf regressions:** `git worktree add --detach <dir> <good-commit>`, a real `npm ci` in it (Turbopack rejects a junctioned `node_modules`), build, serve on another port, then alternate Lighthouse runs (3 each, same session). Single runs vary ±3 points and a busy machine adds more, so never judge a change from one run.
 - Test tooling: Python Playwright + its Chromium; Lighthouse via `npx lighthouse` with `CHROME_PATH` set to Playwright's chrome.exe. On Windows stop servers by port with PowerShell (`Get-NetTCPConnection`); `pkill` does not work. Run the prod server with `npm run start -- -p 3100`.
 
 ## Stack and commands
@@ -19,7 +23,7 @@ Next.js (App Router) + TypeScript + Tailwind CSS v4 + Motion (`motion/react`). D
 npm run dev        # local dev
 npm run build      # production build (must pass before any commit)
 npm run lint
-npx tsc --noEmit   # typecheck
+npm run typecheck  # tsc --noEmit (strict + noUnusedLocals/Parameters + noUncheckedIndexedAccess are ON: keep them on)
 ```
 Quality gate: **90+ on Performance, Accessibility, Best Practices and SEO for mobile and desktop** in PageSpeed Insights, and all applicable Agentic Browsing checks passing. Verify with Lighthouse on a production build, not `dev`.
 Node 24, npm 11. The folder lives in OneDrive: exclude `node_modules` and `.next` from sync if it gets slow.
@@ -35,7 +39,7 @@ Brand Info/                      SOURCE assets, read-only, NOT deployed (gitigno
   Videos/                               11 original 720p mp4s (hash names)
 src/app, src/components, src/lib        (to create) app code
 src/assets/photos                       curated copies of approved photos only, renamed by use
-public/brand                            optimised logos (SVG with C2PA <metadata> stripped), favicons
+public/brand                            lockup-dark.svg (header/footer), emblem.svg (JSON-LD logo), favicon.svg. Other logo variants stay in Brand Info only: copy one over when needed (don't ship unused files)
 ```
 Never reference `Brand Info/` from code. Copy what's needed into `src/assets` / `public/brand`.
 
@@ -101,6 +105,15 @@ Pipeline: `next/image`, AVIF/WebP, explicit `width`/`height` or `fill`+`sizes`, 
 - **Quote form:** 2 steps (projet → coordonnées) with pill radios. Without JS both steps show (noscript style). React 19 resets forms after each action: pill radios use `defaultChecked` and the fieldset is keyed on the submitted value; selects (if reintroduced) need the same. `toolparamdescription` goes on the **fieldset** for radio groups (the Lighthouse WebMCP validator ignores it on the inputs).
 - **Lint gotcha:** `react-hooks/set-state-in-effect` is an error. Derive state or write to the DOM via a ref instead of `setState` in effects.
 
+## Cleanup pass (what was audited and the standing rules)
+- **Verified clean:** no unused exports/imports/components/CSS classes/keyframes, no stray `console.*` (the single `console.log` in `contact/actions.ts` is the intentional dev-only fallback when `RESEND_API_KEY` is missing), no commented-out code, every photo and `public/` file referenced. Removed: 5 Next scaffold SVGs, 3 unused logo variants, the unused `SITE.tagline`. Re-run the scan idea (exports ↔ importers, class ↔ usage, file ↔ reference) before big changes.
+- **Dependencies:** only `next`, `react`, `react-dom`, `motion` (+ standard dev tooling). `npm audit --omit=dev` = 0 vulnerabilities. The 5 "high" findings are all one dev-only chain (`eslint-config-next → fast-glob → micromatch → braces`, ReDoS) with no patched release; the proposed `npm audit fix --force` is a breaking downgrade to Next 14's lint config: **do not run it**.
+- **Canonical URL:** `SITE.url` = `NEXT_PUBLIC_SITE_URL` → `https://$VERCEL_PROJECT_PRODUCTION_URL` → localhost. Never ship a localhost canonical; set `NEXT_PUBLIC_SITE_URL` when the real domain exists.
+- **Error surfaces (French):** `not-found.tsx` (real 404 status), `error.tsx`. **No web manifest on purpose:** with one, Lighthouse fetches `icon-192.png` at High priority during load and mobile LCP got ~0.5 s worse (Réalisations/Solutions fell to 86–89). Theme colour comes from `viewport.themeColor`. Re-measure before adding anything that adds a request at load.
+- **Motion budget:** every island uses `<LazyMotion features={() => import("@/lib/motion-features")}>` (`domMax`). `AnimatedNumber` is dependency-free (IntersectionObserver + rAF), so Offres and Contact ship **no Motion**; Accueil too. `gallery.tsx` and `mobile-menu.tsx` import `m` from `motion/react-m`; `solution-tabs.tsx` deliberately imports `m` from `motion/react`: A/B-tested on the same machine, `react-m` made Solutions mobile Perf 88–89 vs 91 (the lazy features chunk then loads ~130 ms later, after hydration) while it was neutral on Réalisations. **Don't assume a lighter import is faster: measure per page.** Total JS is what matters, not just the `<script>` tags in the HTML: lazy chunks arrive right after load (Solutions ≈ 214 KB gzip, Réalisations similar, Accueil ≈ 182 KB with no Motion).
+- **Accessibility gate:** Lighthouse is not enough. Use axe-core (WCAG 2.2 AA + best-practice) on every page **and** on states: menu open, lightbox, expanded tab, form errors, estimator. Currently 0 violations. Landmarks: the sticky mobile call bar is a labelled `<nav>`.
+- **Git:** `.gitattributes` forces LF (no CRLF churn on Windows).
+
 ## Conventions
 - Server Components by default; `"use client"` only for interactive/animated islands, kept small. Import Motion via `LazyMotion` + `m` components with `domAnimation`.
 - **Animation rules:** animate only `transform`/`opacity`; prefer CSS scroll-driven animations (`animation-timeline: view()`) with a graceful fallback; **the LCP element is never hidden or delayed at load**; everything honours `prefers-reduced-motion`; one signature motion per section, no gratuitous looping. Signature ideas: slowly rotating sun rays, count-up figures (real numbers only), process timeline that draws on scroll.
@@ -113,5 +126,5 @@ Pipeline: `next/image`, AVIF/WebP, explicit `width`/`height` or `fill`+`sizes`, 
 - Commits small and descriptive; run `npm run build` + lint + typecheck first. Update this file whenever a decision changes.
 - Scroll reveals: `.reveal` (CSS scroll-driven); its opacity must finish early in the keyframes so audits never catch text at partial contrast. Hero text uses `.rise` (transform only). Don't animate the LCP text's opacity.
 - Quote form: server action in `src/app/contact/actions.ts` + `src/components/quote-form.tsx` (`useActionState`). React 19 resets the form after each action, so `<select>`s are keyed on the submitted value to keep their selection. Without `RESEND_API_KEY` it logs in dev and shows a "call us" message in production. Env vars: see `.env.example`.
-- Gallery (`src/components/gallery.tsx`, data in `src/lib/gallery.ts`): 35 sharp photos ("Tout" view interleaves categories), native `<dialog>` lightbox, Motion layout animation only after the first filter click, first 4 thumbnails eager, no blur placeholders (payload).
+- Gallery (`src/components/gallery.tsx`, data in `src/lib/gallery.ts`): 35 sharp photos ("Tout" view interleaves categories), native `<dialog>` lightbox, Motion layout animation only after the first filter click, first 4 thumbnails eager, no blur placeholders (payload). **Only the first 8 thumbnails mount at load; the rest mount ~1.5 s later (or instantly on the first filter click)**: Chrome otherwise eagerly fetches ~25 lazy thumbnails on mobile, competing with fonts and hero. Measured: Réalisations mobile Perf 85–90 → 90–91, CLS 0. `INITIAL_VISIBLE` in `gallery.tsx`.
 

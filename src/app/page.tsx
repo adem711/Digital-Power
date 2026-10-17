@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react";
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 import { LinkButton } from "@/components/button";
 import { HeroFX } from "@/components/hero-fx";
@@ -21,11 +21,11 @@ import projRoof from "@/assets/photos/v08-06-array-rooftop-edge.jpg";
 import projBifacial from "@/assets/photos/v09-12-bifacial-underside-sky.jpg";
 import projFinished from "@/assets/photos/v08-01-finished-array-front.jpg";
 
-const SOLUTION_PHOTOS = [
-  { img: residentiel, alt: "Panneaux solaires posés sur la toiture d’une maison, avec la ville en arrière-plan" },
-  { img: commercial, alt: "Vue aérienne d’une grande installation de panneaux solaires sur une terrasse" },
-  { img: stockage, alt: "Deux onduleurs Sungrow fixés au mur dans un coffret technique" },
-];
+const SOLUTION_PHOTOS = {
+  residentiel: { img: residentiel, alt: "Panneaux solaires posés sur la toiture d’une maison, avec la ville en arrière-plan" },
+  commercial: { img: commercial, alt: "Vue aérienne d’une grande installation de panneaux solaires sur une terrasse" },
+  stockage: { img: stockage, alt: "Deux onduleurs Sungrow fixés au mur dans un coffret technique" },
+} satisfies Record<(typeof SOLUTIONS)[number]["slug"], { img: StaticImageData; alt: string }>;
 
 const PROJECTS = [
   { img: projPergola, alt: "Pergola solaire sur une terrasse carrelée sous un ciel bleu", label: "Pergola solaire" },
@@ -132,15 +132,15 @@ export default function Home() {
       <section aria-labelledby="solutions" className="container-x flex flex-col gap-10 py-20 md:py-28">
         <SectionHead n="01" title="Solutions" id="solutions" />
         <div className="grid gap-6 md:grid-cols-3">
-          {SOLUTIONS.map((s, i) => (
+          {SOLUTIONS.map((s) => (
             <article
               key={s.slug}
               className="reveal card-lift flex flex-col overflow-hidden rounded-card border border-line bg-white"
             >
               <div className="img-zoom relative aspect-[4/3] overflow-hidden">
                 <Image
-                  src={SOLUTION_PHOTOS[i].img}
-                  alt={SOLUTION_PHOTOS[i].alt}
+                  src={SOLUTION_PHOTOS[s.slug].img}
+                  alt={SOLUTION_PHOTOS[s.slug].alt}
                   fill
                   sizes="(min-width: 768px) 400px, 100vw"
                   quality={75}

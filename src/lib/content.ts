@@ -1,9 +1,16 @@
 /** All site copy and constants live here (French). Items marked DEMO are placeholders. */
 
+/**
+ * Canonical origin. Order: explicit NEXT_PUBLIC_SITE_URL, then Vercel's production domain (exposed at build
+ * time), then localhost for local development. Prevents canonical/OG/sitemap URLs pointing at localhost.
+ */
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "http://localhost:3000");
+
 export const SITE = {
   name: "Digital Power",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
-  tagline: "Installation solaire photovoltaïque",
+  url: SITE_URL,
   description:
     "Digital Power conçoit et installe des systèmes solaires photovoltaïques pour les maisons et les entreprises en Tunisie : étude, fourniture, pose et raccordement.",
   phone: { display: "94 240 336", href: "tel:+21694240336", e164: "+21694240336" },

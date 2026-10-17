@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { AnimatePresence, LazyMotion, MotionConfig, m, type PanInfo } from "motion/react";
+import { AnimatePresence, LazyMotion, MotionConfig, type PanInfo } from "motion/react";
+import * as m from "motion/react-m";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { GALLERY, GALLERY_FILTERS, type GalleryCategory } from "@/lib/gallery";
 import { ArrowIcon, CloseIcon } from "./icons";
@@ -15,11 +16,15 @@ function interleave(list: typeof GALLERY) {
   for (const g of list) groups.set(g.cat, [...(groups.get(g.cat) ?? []), g]);
   const out: typeof GALLERY = [];
   for (let i = 0; out.length < list.length; i++) {
-    for (const g of groups.values()) if (g[i]) out.push(g[i]);
+    for (const group of groups.values()) {
+      const item = group[i];
+      if (item) out.push(item);
+    }
   }
   return out;
 }
 const INTERLEAVED = interleave(GALLERY);
+const INITIAL_VISIBLE = 8;
 
 export function Gallery() {
   const [filter, setFilter] = useState<"all" | GalleryCategory>("all");
@@ -28,12 +33,21 @@ export function Gallery() {
   const [closing, setClosing] = useState(false);
   // Layout animations are only worth their measuring cost once the visitor starts filtering.
   const [filtered, setFiltered] = useState(false);
+  // Only the first rows are mounted at load; the rest follow right after, so ~30 thumbnails never
+  // compete with fonts and the hero for bandwidth during the initial render (mobile LCP).
+  const [revealAll, setRevealAll] = useState(false);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const lastFocus = useRef<HTMLElement | null>(null);
 
   const items = filter === "all" ? INTERLEAVED : GALLERY.filter((g) => g.cat === filter);
 
   const requestClose = useCallback(() => setClosing(true), []);
+
+  useEffect(() => {
+    const id = window.setTimeout(() => setRevealAll(true), 1500);
+    return () => window.clearTimeout(id);
+  }, []);
+  const visible = revealAll || filtered ? items : items.slice(0, INITIAL_VISIBLE);
 
   useEffect(() => {
     const d = dialogRef.current;
@@ -102,7 +116,7 @@ export function Gallery() {
 
         <ul className="mt-6 grid auto-rows-[120px] grid-cols-2 gap-3 md:auto-rows-[150px] md:grid-cols-3 md:gap-5">
           <AnimatePresence mode="popLayout" initial={false}>
-            {items.map((g, i) => {
+            {visible.map((g, i) => {
               const portrait = g.src.height > g.src.width;
               return (
                 <m.li
