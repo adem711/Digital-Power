@@ -39,9 +39,9 @@ Brand Info/                      SOURCE assets, read-only, NOT deployed (gitigno
   Videos/                               11 original 720p mp4s (hash names)
 src/app, src/components, src/lib        (to create) app code
 src/assets/photos                       curated copies of approved photos only, renamed by use
-public/brand                            lockup-dark.svg (header/footer), emblem.svg (JSON-LD logo), favicon.svg. Other logo variants stay in Brand Info only: copy one over when needed (don't ship unused files)
+public/brand                            lockup-dark.svg (header/footer), emblem.svg (JSON-LD logo). The favicon lives in `src/app/icon.svg` (+ `favicon.ico`, `apple-icon.png`) by Next convention: don't duplicate it in `public/`. Other logo variants stay in Brand Info only: copy one over when needed (don't ship unused files)
 ```
-Never reference `Brand Info/` from code. Copy what's needed into `src/assets` / `public/brand`.
+`Trash/` (git-ignored, excluded from tsc and ESLint): where cleanups park files instead of deleting them; restore by moving back to the same relative path. Never reference `Brand Info/` from code. Copy what's needed into `src/assets` / `public/brand`.
 
 ## Business facts (real, confirmed)
 - Primary phone: **94 240 336** (`+21694240336`). Shopfront also shows 94 46 03 36 (unconfirmed, don't publish).

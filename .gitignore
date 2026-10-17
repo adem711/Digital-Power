@@ -42,4 +42,7 @@ next-env.d.ts
 
 # source assets (large, not deployed)
 /Brand Info/
+
+# local safety net for files moved out during cleanups (restore by moving back)
+/Trash/
 !.env.example

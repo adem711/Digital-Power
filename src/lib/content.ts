@@ -17,7 +17,6 @@ export const SITE = {
   whatsapp: {
     display: "+216 22 363 037",
     href: "https://wa.me/21622363037",
-    e164: "+21622363037",
   },
   facebook: "https://www.facebook.com/digital.power.tn",
   // DEMO — opening hours not provided by the owner
